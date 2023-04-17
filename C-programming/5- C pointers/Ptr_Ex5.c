@@ -15,11 +15,29 @@ struct Semplywee {
 };
 
 int main(){
-	struct Semplywee emp1 ={"Kareem",1122}, emp2 ={"Ahmed",3344}, emp3 ={"Mostafa",5566};
-	struct Semplywee *Parr[] = {&emp1, &emp2, &emp3};
+	struct Semplywee emp [3];
+	struct Semplywee *Parr[3];
+	int i;
+	char name[30];
+
+	Parr[0] = &emp[0];
+	for(i=0; i<3; i++){
+		Parr[i] = &emp[i];
+	}
+
+	for(i=0; i<3; i++){
+		printf("Enter name: ");
+		fflush(stdin);  fflush(stdout);
+		fgets(name,30,stdin);
+		strcpy(Parr[i]->name, name);
+
+		printf("\nEnter ID: \t");
+		fflush(stdin);  fflush(stdout);
+		scanf("%d",&Parr[i]->ID);
+	}
 
 	for(int i=0; i<3; i++){
-		printf("%s \t%d \n",Parr[i]->name ,Parr[i]->ID);
+		printf("%s %d \n",Parr[i]->name ,Parr[i]->ID);
 	}
 
 	return 0;
