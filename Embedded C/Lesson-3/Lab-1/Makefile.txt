@@ -1,0 +1,28 @@
+CC=arm-none-eabi-
+CFLAGS=-g -mcpu=versatilepb-s
+INCS=-I .
+LIBS=
+SRC = $(wildcard *.c)
+OBJ = $(SRC:.c=.o)
+As = $(wildcard *.s)
+AsOBJ = $(As:.s=.o)
+Project_name = UART
+
+all: $(Project_name).bin
+	@echo "-----Build is done-----"
+
+#startup
+%.o: %.s
+	$ (CC)as.exe  $ (CFLAGS) $< -o $@
+
+#fiels
+%.o: %.c
+	$(CC)gcc.exe  -c $(CFLAGS) $(INCS) $< -o $@
+
+#linker
+$(Project_name).elf: $(OBJ) $(AsOBJ)
+	$(CC)ld.exe -T linker_script.ld $(LIBS) $(OBJ) $(AsOBJ) -o $@
+
+#Binary
+$(Project_name).bin: $(Project_name).elf
+	$(CC)objcopy.exe -O binary $< $@
