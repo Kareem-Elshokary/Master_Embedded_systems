@@ -1,0 +1,4 @@
+1 kareem abdelkader 3.5 2 4 6 8 10
+2 mostafa foad 2.6 1 2 4 5 9
+3 farok ali 3 6 7 8 9 2
+4 mahmoud hamed 3.2 1 3 5 7 9
