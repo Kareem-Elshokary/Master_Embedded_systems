@@ -1,0 +1,44 @@
+#include <stdio.h>
+
+#define GPIOD_BASE  0x0600
+#define GPIOD_DIR   *((unsigned int*)(GPIOD_BASE + 0x00))
+#define DDRD        *((unsigned int*)(GPIOD_BASE + 0x11))
+#define PORTD       *((unsigned int*)(GPIOD_BASE + 0x12))
+
+#define LED1        (1 << 5)
+#define LED2        (1 << 6)
+#define LED3        (1 << 7)
+#define Buzzer      (1 << 4)
+
+
+int main(void)
+{
+    DDRD  = 0x11110000;
+	PORTD = 0x00000000;
+	unsigned int i;
+
+    while (1)
+    {
+		PORTD |= LED1;
+		for(i=0; i<20000; i++);
+		PORTD = 0x00;
+		for(i=0; i<20000; i++);
+
+		PORTD |= LED2;
+		for(i=0; i<20000; i++);
+		PORTD = 0x00;
+		for(i=0; i<20000; i++);
+
+		PORTD |= LED3;
+		for(i=0; i<20000; i++);
+		PORTD = 0x00;
+		for(i=0; i<20000; i++);
+
+		PORTD |= Buzzer;
+		for(i=0; i<20000; i++);
+		PORTD = 0x00;
+		for(i=0; i<20000; i++);
+    }
+
+}
+
