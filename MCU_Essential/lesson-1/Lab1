@@ -1,0 +1,75 @@
+/*
+ * mcu1.c
+ *
+ *  Created on: Oct 5, 2023
+ *      Author: KARIM
+ */
+
+#include <stdio.h>
+#include <stdint.h>
+
+//The registers Base address
+#define RCC_BASE     0x40021000
+#define GPIOA_BASE   0x40010800
+#define GPIOB_BASE   0x40010C00
+
+//Clock address
+#define RCC_APB2ENR   *((volatile unsigned int*)(RCC_BASE + 0x18))
+#define IOPAEN        (1<<2)
+#define IOPBEN        (1<<3)
+
+//GPIO ports address
+#define GPIOA_CRL     *((volatile unsigned int*)(GPIOA_BASE + 0x00))
+#define GPIOA_CRH     *((volatile unsigned int*)(GPIOA_BASE + 0x04))
+#define GPIOA_IDR     *((volatile unsigned int*)(GPIOA_BASE + 0x08))
+#define GPIOA_ODR     *((volatile unsigned int*)(GPIOA_BASE + 0x0c))
+
+#define GPIOB_CRL     *((volatile unsigned int*)(GPIOB_BASE + 0x00))
+#define GPIOB_CRH     *((volatile unsigned int*)(GPIOB_BASE + 0x04))
+#define GPIOB_IDR     *((volatile unsigned int*)(GPIOB_BASE + 0x08))
+#define GPIOB_ODR     *((volatile unsigned int*)(GPIOB_BASE + 0x0c))
+
+
+void Clock_init(){
+	RCC_APB2ENR |= IOPAEN;
+	RCC_APB2ENR |= IOPBEN;
+}
+
+void GPIO_init(){
+	//Input Pins (A1 - A13)
+	//Pin A1
+	GPIOA_CRL &= ~(0b00 << 4);   //act as input
+	GPIOA_CRL |= (0b01 << 6);    //input mode (floating)
+	//Pin A13
+	GPIOA_CRH &= ~(0b00 << 20);  //act as input
+	GPIOA_CRH |= (0b01 << 22);   //input mode (floating)
+
+	//Output Pins (B1 - B13)
+	//Pin B1
+	GPIOB_CRL = 0b01 << 4;       //act as output
+	GPIOB_CRL &= ~(0b00 << 6);   //output mode (push-pull)
+	//Pin B13
+	GPIOB_CRH &= ~(0b01 << 20);  //act as output
+	GPIOB_CRH &= ~(0b00 << 22);  //output mode (push-pull)
+}
+
+
+int main(){
+
+	GPIO_init();
+	Clock_init();
+	unsigned int i;
+
+	while(1){
+		if( (GPIOA_IDR << 1) == 0 ){
+			GPIOB_ODR ^= (1<<1);
+			for(i=0; i<20000; i++); //Delay
+		}
+		if( (GPIOA_IDR << 13) == 1 ){
+			GPIOB_ODR ^= (1<<13);
+			for(i=0; i<20000; i++); //Delay
+		}
+	}
+
+}
+
